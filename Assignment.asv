@@ -46,7 +46,7 @@ P
 Q_KF = diag([1,0.00001,1,0.00001]);
 R_KF = 1;
 C = [1, 0, 0, 0; 0, 0, 1, 0];
-dt = 0.01;
 Ad = A*dt+eye(4);
-K_KF = dlqr(Ad', C', Q_KF, R_KF)'
+Bd = B*dt;
+K_KF = dlqr(A', C', Q_KF, R_KF)
 hold off

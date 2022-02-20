@@ -21,6 +21,7 @@ end
 
 N = duration*samples_per_second
 dt = duration/N
+N=150
 
 score = 0;
 
@@ -47,7 +48,6 @@ for i = 1:N
   x_est_array(i,:) = transpose(x_est);
  %Kalman
  yy = C*xx;
- yy = awgn(yy, 20); %add noise to observer
  Ad = A*dt+eye(4);
  Bd = B*dt;
  x_est = Ad*x_est+Bd*uu-K_KF*(C*x_est-yy);
@@ -85,25 +85,16 @@ title( 'x' )
 hold off
 
 figure(3)
-hold on
 plot(1:N,x_array(:,3));
-plot(1:N, x_est_array(:,3), 'r--')
 title( 'angle' )
-hold off
 
 figure(4)
-hold on
 plot(1:N,x_array(:,2));
-plot(1:N, x_est_array(:,2), 'r--')
 title( 'forward velocity' )
-hold off
 
 figure(5)
-hold on
 plot(1:N,x_array(:,4));
-plot(1:N, x_est_array(:,4), 'r--')
 title( 'angular velocity' )
-hold off
 
 figure(6)
 plot(1:N,u_array(:,1));
