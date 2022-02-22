@@ -27,4 +27,7 @@ The Q and R components matter only when the corresponding variables in the state
 Need one component for each independent variable for pole location control
 #
 # D
-# 
+Switch the function called here between noKalman, samedtKalman, and fastdtKalman to run without the Kalman filter or either of the two different types of Kalman filters: https://github.com/MN-Hogwarts/16-299-TWIP/blob/38add8c566b2d4cf450fa157ca84f55d31a3ed80/main.m#L48
+
+What is the difference in command response between this KF+LQR combination, and the same LQR design with full state feedback?
+- With the KF+LQR combination, the commands look jerkier and do not get the system to its goal as smoothly. This makes sense since the system no longer has as much information and noise has been introduced into the system.
