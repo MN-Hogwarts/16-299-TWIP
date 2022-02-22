@@ -29,13 +29,13 @@ x_array = zeros(N,4); % states
 x_est_array = zeros(N,4);
 u_array = zeros(N,1); % commands
 a_array = zeros(N,2); % acceleration
+C = [1,0,0,0;0,0,1,0];
 
 % initial conditions
 xx = x0;
 x_est = x0;
 yy = [x0(1); x0(3)];
 uu = 0;
-C = [1,0,0,0;0,0,1,0];
 
 init_plots( xx, N, r_w, l_p );
 
@@ -45,14 +45,7 @@ aa = [ 0 0 ];
 for i = 1:N
   x_array(i,:) = transpose( xx );
   x_est_array(i,:) = transpose(x_est);
- %Kalman
- yy = C*xx;
- yy = awgn(yy, snr); %add noise to observer
- Ad = A*dt+eye(4);
- Bd = B*dt;
- x_est = Ad*x_est+Bd*uu-K_KF*(C*x_est-yy);
- %ctrl
- uu = -K_ctrl*x_est;
+  [uu, x_est] = samedtKalman(xx, K_ctrl, x_est, uu, A, B, C, snr, dt, K_KF);
   u_array(i,1) = uu;
  [xdd, thdd] = twip( xx(3), xx(4), uu, m_w, r_w, I_w, m_p, l_p, I_p, g );
  aa = [xdd thdd];
@@ -113,3 +106,28 @@ figure(1)
 
 % To zoom in on a plot
 % axis([0 10000 -0.01 0.01])
+
+function [uu, x_est] = noKalman(xx, K_ctrl, ~, ~, ~, ~, ~, ~, ~, ~)
+    uu = -K_ctrl*xx;
+    %disp(K_ctrl);
+    x_est = xx;
+end
+
+function [uu, x_est] = samedtKalman(xx, K_ctrl, x_est, uu, A, B, C, snr, dt, K_KF)
+    yy = C*xx;
+    yy = awgn(yy, snr); %add noise to observer
+    Ad = A*dt+eye(4);
+    Bd = B*dt;
+    x_est = Ad*x_est+Bd*uu-K_KF*(C*x_est-yy);
+    uu = -K_ctrl*x_est;
+end
+
+function [uu, x_est] = fastdtKalman(xx, K_ctrl, x_est, uu, A, B, C, snr, dt, K_KF)
+    dt_kalman = dt/5; % Faster
+    yy = C*xx;
+    yy = awgn(yy, snr); %add noise to observer
+    Ad = A*dt_kalman+eye(4);
+    Bd = B*dt_kalman;
+    x_est = Ad*x_est+Bd*uu-K_KF*(C*x_est-yy);
+    uu = -K_ctrl*x_est;
+end
