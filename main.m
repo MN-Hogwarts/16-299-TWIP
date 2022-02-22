@@ -47,12 +47,12 @@ for i = 1:N
   x_est_array(i,:) = transpose(x_est);
  %Kalman
  yy = C*xx;
- yy = awgn(yy, 20); %add noise to observer
+ yy = awgn(yy, snr); %add noise to observer
  Ad = A*dt+eye(4);
  Bd = B*dt;
  x_est = Ad*x_est+Bd*uu-K_KF*(C*x_est-yy);
  %ctrl
- uu = -k*x_est;
+ uu = -K_ctrl*x_est;
   u_array(i,1) = uu;
  [xdd, thdd] = twip( xx(3), xx(4), uu, m_w, r_w, I_w, m_p, l_p, I_p, g );
  aa = [xdd thdd];

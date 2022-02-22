@@ -20,9 +20,4 @@
 #   We chose Q to have ones at x and th and R to be one because the design criteria was to 
 #    minimize (xx+thth+tautatu) so all should be weighted equally
 # C2
-#  See figure 1 after running Assignment
-#  The Q and R components matter only when the corresponding variables in the state vector are observed (on from C)
-#  Need one component for each independent variable for pole location control
-#
-# D
-# 
+# S
